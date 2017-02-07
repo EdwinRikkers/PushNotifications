@@ -70,6 +70,14 @@
 
 }
 
+- (void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"clicked on the shade");
+    PushPlugin *pushHandler = [self getCommandInstance:@"PushNotification"];
+    pushHandler.notificationMessage = userInfo;
+    pushHandler.isInline = NO;
+    [pushHandler notificationReceived];
+}
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 
     UIApplicationState appState = application.applicationState;
