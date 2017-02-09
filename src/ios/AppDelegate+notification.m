@@ -77,11 +77,25 @@
 }
 
 - (void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    NSLog(@"clicked on the shade");
-    PushPlugin *pushHandler = [self getCommandInstance:@"PushNotification"];
-    pushHandler.notificationMessage = userInfo;
-    pushHandler.isInline = NO;
-    [pushHandler notificationReceived];
+    UIApplicationState appState = application.applicationState;
+    
+    NSMutableDictionary* notification = [NSMutableDictionary dictionaryWithDictionary:[userInfo objectForKey:@"aps"]];
+    NSMutableDictionary* payload = [NSMutableDictionary dictionaryWithDictionary:[userInfo mutableCopy]];
+    [payload removeObjectForKey:@"aps"];
+    
+    [notification setObject: payload forKey:@"custom"];
+    [notification setObject:[self getUUID] forKey:@"uuid"];
+    [notification setObject:[self getCurrentDate] forKey:@"timestamp"];
+    
+    if (appState == UIApplicationStateActive) {
+        [notification setObject:[NSNumber numberWithBool:YES] forKey:@"foreground"];
+    }
+    else {
+        [notification setObject:[NSNumber numberWithBool:NO] forKey:@"foreground"];
+        [notification setObject:[NSNumber numberWithBool:YES] forKey:@"coldstart"];
+    }
+    
+    [[NotificationService instance] receivedNotification:notification];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {

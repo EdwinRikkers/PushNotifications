@@ -24,57 +24,20 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <Cordova/CDV.h>
-#import <Cordova/CDVPlugin.h>
+#import "CDV.h"
+#import "CDVPlugin.h"
+#import "NotificationService.h"
 
-@protocol GGLInstanceIDDelegate;
-@protocol GCMReceiverDelegate;
-@interface PushPlugin : CDVPlugin<GGLInstanceIDDelegate, GCMReceiverDelegate>
-{
-    NSDictionary *notificationMessage;
-    BOOL    isInline;
-    NSString *notificationCallbackId;
-    NSString *callback;
-    BOOL    clearBadge;
-    
-    NSMutableDictionary *handlerObj;
-    void (^completionHandler)(UIBackgroundFetchResult);
-    
-    BOOL ready;
-}
+@interface PushPlugin : CDVPlugin
 
-@property (nonatomic, copy) NSString *callbackId;
-@property (nonatomic, copy) NSString *notificationCallbackId;
-@property (nonatomic, copy) NSString *callback;
-
-@property (nonatomic, strong) NSDictionary *notificationMessage;
-@property BOOL isInline;
-@property BOOL coldstart;
-@property BOOL clearBadge;
-@property (nonatomic, strong) NSMutableDictionary *handlerObj;
-
-- (void)init:(CDVInvokedUrlCommand*)command;
 - (void)unregister:(CDVInvokedUrlCommand*)command;
-- (void)subscribe:(CDVInvokedUrlCommand*)command;
-- (void)unsubscribe:(CDVInvokedUrlCommand*)command;
 
-- (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
-- (void)didFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
+- (void)onMessageInBackground:(CDVInvokedUrlCommand*)command;
 
-- (void)setNotificationMessage:(NSDictionary *)notification;
-- (void)notificationReceived;
+- (void)onMessageInForeground:(CDVInvokedUrlCommand*)command;
 
-- (void)willSendDataMessageWithID:(NSString *)messageID error:(NSError *)error;
-- (void)didSendDataMessageWithID:(NSString *)messageID;
-- (void)didDeleteMessagesOnServer;
+- (void)register:(CDVInvokedUrlCommand*)command;
 
-//  GCM Features
-@property(nonatomic, assign) BOOL usesGCM;
-@property(nonatomic, strong) NSNumber* gcmSandbox;
-@property(nonatomic, strong) NSString *gcmSenderId;
-@property(nonatomic, strong) NSDictionary *gcmRegistrationOptions;
-@property(nonatomic, strong) void (^gcmRegistrationHandler) (NSString *registrationToken, NSError *error);
-@property(nonatomic, strong) NSString *gcmRegistrationToken;
-@property(nonatomic, strong) NSArray *gcmTopics;
+- (void)setApplicationIconBadgeNumber:(CDVInvokedUrlCommand *)command;
 
 @end
