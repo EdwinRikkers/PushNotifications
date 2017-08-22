@@ -412,10 +412,9 @@ public class NotificationService {
 
         public void notifyRegistered() {
             if (hasNotifiedOfRegistered()) {
-                Log.v(TAG,
-                        "notifyRegistered() - Webview already notified of registration. skipping callback. webview: "
+				Log.v(TAG,
+                        "notifyRegistered() - Webview already notified of registration once. webview: "
                                 + getWebView());
-                return;
             }
 
             if (getRegisterCallBack() != null) {
